@@ -3,7 +3,7 @@ import joblib
 import base64
 import pandas as pd
 
-model = joblib.load("model.pkl")
+model = joblib.load("model.pkl")  
 
 def set_background(image_file):
     with open(image_file, "rb") as f:
@@ -25,7 +25,7 @@ def style_predict_button():
     st.markdown("""
         <style>
         div.stButton > button {
-            background-color: #1f77b4;
+            background-color: #1f77b4; 
             color: white;
             font-weight: bold;
             border: none;
@@ -34,13 +34,13 @@ def style_predict_button():
             transition: background-color 0.3s ease;
         }
         div.stButton > button:hover {
-            background-color: #0056b3;
+            background-color: #0056b3; # Colour code for blue
         }
         </style>
     """, unsafe_allow_html=True)
 
 def gif_image():
-    gif_url = "https://tenor.com/view/squid-game-front-man-squid-game-2-happy-celebration-gif-12369111202088932661.gif"
+    gif_url = "https://tenor.com/view/squid-game-front-man-squid-game-2-happy-celebration-gif-12369111202088932661.gif" #predictprice.gif
     st.markdown(f'<img src="{gif_url}" alt="Loading..." width="100%">', unsafe_allow_html=True)
 
 town_mapping = {
@@ -67,8 +67,9 @@ flattype_mapping = {
     "Improved": 0, "New Generation": 1, "Maisonette": 2, "Apartment": 3, "Multi-Generation": 4
 }
 
-def main():
-    st.markdown('<h1 style="color:black;">HDB Resale Price Prediction</h1>', unsafe_allow_html=True)
+def main(): # Main entry function to run the Streamlit app
+    
+    st.markdown('<h1 style="color:black;">HDB Resale Price Prediction</h1>', unsafe_allow_html=True) #unsafe_allow_html=True allows HTML tags to be rendered
     st.markdown('<p style="color:white;">This app predicts the resale price of HDB flats based on various features.</p>', unsafe_allow_html=True)
 
     st.markdown(
@@ -92,12 +93,13 @@ def main():
             'lease_commence_date': [selected_leasecommenceyr]
         })
 
-        ohe_df = pd.get_dummies(input_df, columns=['town', 'flat_type', 'storey_range'])
-        ohe_df = ohe_df.reindex(columns=model.feature_names_in_, fill_value=0)
+        ohe_df = pd.get_dummies(input_df, columns=['town', 'flat_type', 'storey_range']) #One-hot encode categorical variables
+        ohe_df = ohe_df.reindex(columns=model.feature_names_in_, fill_value=0) # Reindex to 0 if any columns are missing
 
-        prediction = model.predict(ohe_df)
+        prediction = model.predict(ohe_df) # Predict resale price
 
-        st.markdown(f'<span style="color:white;">The predicted resale price is: ${prediction[0]:,.2f}</span>', unsafe_allow_html=True)
+        st.markdown(f'<span style="color:white;">The predicted resale price is: ${float(prediction[0]):,.2f}</span>', unsafe_allow_html=True)
+        #convert to float for formatting
         gif_image()
 
 if __name__ == "__main__":
